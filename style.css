@@ -49,3 +49,16 @@
 .white {
   background-color: rgb(224, 220, 220);
 }
+
+.white,
+.black {
+  display: flex;
+  text-align: center;
+  font-size: 38px;
+}
+
+.white p,
+.black p {
+  margin: auto;
+  color: rgb(49, 196, 105);
+}

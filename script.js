@@ -20,8 +20,8 @@ function createBoard() {
           square.setAttribute("class", "white");
         }
 
-        square.setAttribute("x", x);
-        square.setAttribute("y", y);
+        square.setAttribute("data-x", x);
+        square.setAttribute("data-y", y);
         chessBoard.appendChild(square);
       }
     }
@@ -47,17 +47,12 @@ function createBoard() {
   createLabels();
 }
 
-const move = (x, y) => {
-  const possibleMoves = [];
+const knightFactory = () => {
+  const move = (x, y) => {
+    const possibleMoves = [];
 
-  return { x, y, possibleMoves };
-};
-
-const knightMoves = () => {
-  // recursive function from start node
-  // check each child node from array
-  // once it finds the exit node
-  // print out everything along the way
+    return { x, y, possibleMoves };
+  };
 
   // Initialise all possible moves
   const a1 = move(1, 1);
@@ -191,9 +186,215 @@ const knightMoves = () => {
   h7.possibleMoves = [g5, f6, f8];
   h8.possibleMoves = [g6, f7];
 
-  console.log(a1);
+  const movesArr = [
+    a1,
+    a2,
+    a3,
+    a4,
+    a5,
+    a6,
+    a7,
+    a8,
+    b1,
+    b2,
+    b3,
+    b4,
+    b5,
+    b6,
+    b7,
+    b8,
+    c1,
+    c2,
+    c3,
+    c4,
+    c5,
+    c6,
+    c7,
+    c8,
+    d1,
+    d2,
+    d3,
+    d4,
+    d5,
+    d6,
+    d7,
+    d8,
+    e1,
+    e2,
+    e3,
+    e4,
+    e5,
+    e6,
+    e7,
+    e8,
+    f1,
+    f2,
+    f3,
+    f4,
+    f5,
+    f6,
+    f7,
+    f8,
+    g1,
+    g2,
+    g3,
+    g4,
+    g5,
+    g6,
+    g7,
+    g8,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    h7,
+    h8,
+  ];
+
+  const startPosition = (x, y) => {
+    // Get start position
+    let pos;
+    movesArr.forEach((elem) => {
+      if (elem.x === x && elem.y === y) {
+        pos = elem;
+      }
+    });
+    return pos;
+  };
+
+  const endPosition = (x, y) => {
+    // Get end position
+    let pos;
+    movesArr.forEach((elem) => {
+      if (elem.x === x && elem.y === y) {
+        pos = elem;
+      }
+    });
+
+    return pos;
+  };
+
+  const plotMoves = (moves) => {
+    const chessBoard = document.getElementById("board");
+
+    for (let i = 0; i < moves.length; i++) {
+      const p = document.createElement("p");
+      p.textContent = i;
+      if (i === 0) {
+        p.textContent = "Start";
+      } else if (i === moves.length - 1) {
+        p.textContent = "End";
+      }
+
+      for (let j = 0; j < chessBoard.childNodes.length; j++) {
+        if (
+          chessBoard.childNodes[j].dataset.x == moves[i].x &&
+          chessBoard.childNodes[j].dataset.y == moves[i].y
+        ) {
+          chessBoard.childNodes[j].appendChild(p);
+        }
+      }
+    }
+  };
+
+  const knightMoves = (a, b) => {
+    const [x1, y1] = a;
+    const [x2, y2] = b;
+
+    const start = startPosition(x1, y1);
+    const end = endPosition(x2, y2);
+
+    const steps = findMoves(start, end);
+    plotMoves(steps);
+    console.log(steps.length, "steps");
+    return steps;
+  };
+
+  function findMoves(
+    current,
+    end,
+    previousMove,
+    movesList = [],
+    finalList = []
+  ) {
+    if (current.x === end.x && current.y === end.y) {
+      movesList.forEach((move) => {
+        finalList.push(move);
+      });
+      finalList.push(current);
+      return;
+    }
+
+    if (!movesList.includes(current)) {
+      movesList.push(current);
+    }
+
+    function DistSquared(end, current) {
+      const diffX = current.x - end.x;
+      const diffY = current.y - end.y;
+      return diffX * diffX + diffY * diffY;
+    }
+
+    let closest = current.possibleMoves[0];
+    let shortestDistance = DistSquared(current, end);
+    for (let i = 0; i < current.possibleMoves.length; i++) {
+      if (!movesList.includes(current.possibleMoves[i])) {
+        const distance = DistSquared(end, current.possibleMoves[i]);
+        if (distance < shortestDistance) {
+          closest = current.possibleMoves[i];
+          shortestDistance = distance;
+        }
+      }
+    }
+
+    console.log(closest);
+    // current.possibleMoves.forEach((move) => {
+    //   if (move.x === end.x && move.y === end.y) {
+    //     if (movesList.length === 0) {
+    //       finalList.push(move);
+    //     } else {
+    //       console.log("Condition 2");
+    //       movesList.forEach((move) => {
+    //         finalList.push(move);
+    //       });
+    //     }
+    //     finalList.push(end);
+    //   }
+    // });
+
+    if (!movesList.includes(closest) && finalList.length === 0) {
+      previousMove = current;
+      findMoves(closest, end, current, movesList, finalList);
+    }
+
+    // current.possibleMoves.forEach((move) => {
+    //   if (!previousMove) {
+    //     previousMove = current;
+    //     if (move.x === end.x && move.y === end.y) {
+    //       return;
+    //     }
+    //     if (!movesList.includes(move) && finalList.length === 0) {
+    //       findMoves(move, end, current, movesList, finalList);
+    //     }
+    //   } else {
+    //     if (move.x === end.x && move.y === end.y) {
+    //       return;
+    //     }
+    //     if (!movesList.includes(move) && finalList.length === 0) {
+    //       findMoves(move, end, current, movesList, finalList);
+    //     }
+    //   }
+    // });
+    return finalList;
+  }
+
+  return { knightMoves };
 };
 
 createBoard();
 
-console.log(knightMoves());
+const knight = knightFactory();
+
+console.log(knight.knightMoves([4, 4], [1, 4]));
