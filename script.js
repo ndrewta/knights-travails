@@ -5,8 +5,8 @@ function createBoard() {
 
   function createSquares() {
     // Create chess board squares
-    for (let x = 7; x >= 0; x--) {
-      for (let y = 0; y < 8; y++) {
+    for (let x = 8; x > 0; x--) {
+      for (let y = 1; y <= 8; y++) {
         const square = document.createElement("div");
         if (x % 2 === 0) {
           if (y % 2 === 0) {
@@ -47,7 +47,7 @@ function createBoard() {
   createLabels();
 }
 
-const plotMoves = (moves) => {
+function plotMoves(moves) {
   const chessBoard = document.getElementById("board");
 
   for (let i = 0; i < moves.length; i++) {
@@ -68,7 +68,7 @@ const plotMoves = (moves) => {
       }
     }
   }
-};
+}
 
 const knightFactory = () => {
   function run(a, b) {
@@ -121,10 +121,10 @@ const knightFactory = () => {
         const next = { x: nextX, y: nextY };
 
         if (
-          nextX >= 0 &&
-          nextX < boardSize &&
-          nextY >= 0 &&
-          nextY < boardSize &&
+          nextX > 0 &&
+          nextX <= boardSize &&
+          nextY > 0 &&
+          nextY <= boardSize &&
           !visited.has(JSON.stringify(next))
         ) {
           // Check if moves go off board
@@ -155,4 +155,4 @@ const knightFactory = () => {
 createBoard();
 
 const knight = knightFactory();
-knight.run([4, 4], [1, 4]);
+knight.run([1, 1], [8, 4]);

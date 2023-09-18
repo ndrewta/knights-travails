@@ -1,15 +1,25 @@
 .board-div {
   display: grid;
   grid-template-columns: 75px 1fr;
-  grid-template-rows: 1fr 75px;
+  grid-template-rows: 100px 1fr 75px;
   padding: 0;
-  margin: 25vh auto;
+  margin: 20vh auto;
   width: 677px;
+}
+
+#top-div {
+  margin: 0;
+  padding: 0;
+  grid-row-start: 1;
+  grid-column-start: 2;
+  font-size: 15px;
+  text-align: center;
 }
 
 #board {
   display: grid;
   grid-column-start: 2;
+  grid-row-start: 2;
   grid-template-columns: repeat(8, 75px);
   grid-template-rows: repeat(8, 75px);
   border: solid 1px black;
@@ -24,6 +34,7 @@
   grid-template-rows: repeat(8, 75px);
   text-align: center;
   font-size: 30px;
+  grid-row-start: 2;
 }
 
 #left-labels p {
@@ -36,6 +47,7 @@
   text-align: center;
   font-size: 30px;
   grid-column-start: 2;
+  grid-row-start: 3;
 }
 
 #bot-labels p {
